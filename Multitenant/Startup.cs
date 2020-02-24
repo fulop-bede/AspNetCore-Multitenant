@@ -29,11 +29,11 @@ namespace Multitenant
         public IConfiguration Configuration { get; }
         public ILifetimeScope AutofacContainer { get; private set; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
             services.AddOptions();
+
             // This adds the required middleware to the ROOT CONTAINER and is required for multitenancy to work.
             services.AddAutofacMultitenantRequestServices();
 
@@ -58,7 +58,6 @@ namespace Multitenant
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            // This will all go in the ROOT CONTAINER and is NOT TENANT SPECIFIC.
             builder.RegisterType<TenantService>().As<ITenantService>().SingleInstance();
             builder.RegisterType<TenantResolver>().As<ITenantResolver>().SingleInstance();
             builder.RegisterType<MyTenantIdentificationStrategy>().As<ITenantIdentificationStrategy>().SingleInstance();
@@ -83,7 +82,6 @@ namespace Multitenant
 
         public static MultitenantContainer ConfigureMultitenantContainer(IContainer container)
         {
-            // This is the MULTITENANT PART. Set up your tenant-specific stuff here.
             var strategy = container.Resolve<ITenantIdentificationStrategy>();
             var mtc = new MultitenantContainer(strategy, container);
 

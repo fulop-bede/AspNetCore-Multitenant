@@ -9,34 +9,31 @@ using static Multitenant.Dal.BaseDbContext;
 namespace Multitenant.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("test")]
     public class TestController : ControllerBase
     {
-        private readonly ILogger<TestController> _logger;
         private readonly ITestService testService;
         private readonly IDbUsingService dbUsingService;
         private readonly BaseDbContext baseContext;
 
         public TestController(
-            ILogger<TestController> logger,
             ITestService testService,
             IDbUsingService dbUsingService,
             BaseDbContext baseContext)
         {
-            _logger = logger;
             this.testService = testService;
             this.dbUsingService = dbUsingService;
             this.baseContext = baseContext;
         }
 
-        [HttpGet]
-        public string Get()
+        [HttpGet("tenant-spcific-service")]
+        public string GetServiceName()
         {
-            return testService.Test();
+            return testService.GetName();
         }
 
-        [HttpGet("from-db")]
-        public Task<List<CommonEntity>> GetFromDb()
+        [HttpGet("tenant-spcific-db")]
+        public Task<List<CommonEntity>> GetEntities()
         {
             return dbUsingService.GetEntities();
         }
