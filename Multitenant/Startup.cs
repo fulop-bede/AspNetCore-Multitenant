@@ -7,11 +7,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Multitenant.Auth;
 using Multitenant.Dal;
 using Multitenant.FeatureHandling;
 using Multitenant.Filters;
@@ -71,9 +69,6 @@ namespace Multitenant
                         ValidateLifetime = true
                     };
                 });
-
-            //services.AddSingleton<IPostConfigureOptions<JwtBearerOptions>, CustomJwtBearerOptionsPostConfigureOptions>();
-            //services.AddSingleton<SecurityTokenValidator>();
 
             services.AddSwaggerGen(c =>
             {
