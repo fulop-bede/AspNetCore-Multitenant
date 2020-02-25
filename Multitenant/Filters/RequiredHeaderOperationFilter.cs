@@ -17,16 +17,18 @@ namespace Multitenant.Filters
                 operation.Parameters = new List<OpenApiParameter>();
             }
 
+            var schema = new OpenApiSchema
+            {
+                Type = "String"
+            };
             operation.Parameters.Add(new OpenApiParameter
             {
                 Name = "X-Tenant-Id",
                 Description = "Tenant id for the request",
                 In = ParameterLocation.Header,
                 Required = false,
-                Schema = new OpenApiSchema
-                {
-                    Type = "String"
-                }
+                Example = OpenApiAnyFactory.CreateFor(schema, "first-tenant"),
+                Schema = schema
             });
         }
     }

@@ -1,5 +1,5 @@
 ﻿using Autofac.Features.Indexed;
-using Multitenant.Multitenancy.Model;
+using Multitenant.Multitenancy;
 
 namespace Multitenant.Extensions
 {

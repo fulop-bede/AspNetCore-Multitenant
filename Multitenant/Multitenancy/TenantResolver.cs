@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
-using Multitenant.Multitenancy.Model;
 using System.Threading.Tasks;
 
 namespace Multitenant.Multitenancy

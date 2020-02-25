@@ -1,4 +1,4 @@
-﻿namespace Multitenant.FeatureFilters
+﻿namespace Multitenant.FeatureHandling
 {
     public static class FeatureFlags
     {

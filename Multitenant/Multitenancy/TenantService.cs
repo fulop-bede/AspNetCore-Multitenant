@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Multitenant.Dal;
-using Multitenant.Multitenancy.Model;
 using System.Threading.Tasks;
 
 namespace Multitenant.Multitenancy

@@ -1,10 +1,10 @@
 ﻿using Microsoft.FeatureManagement;
-using Multitenant.Multitenancy.Model;
+using Multitenant.Multitenancy;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Multitenant.FeatureFilters
+namespace Multitenant.FeatureHandling
 {
     [FilterAlias(nameof(TenantsFeatureFilter))]
     public class TenantsFeatureFilter : IFeatureFilter

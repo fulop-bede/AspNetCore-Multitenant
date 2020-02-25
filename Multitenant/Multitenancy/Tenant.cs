@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Multitenant.Multitenancy.Model
+namespace Multitenant.Multitenancy
 {
     public class Tenant
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using Multitenant.Multitenancy.Model;
+using Multitenant.Multitenancy;
 using System.IO;
 
 namespace Multitenant.Dal
