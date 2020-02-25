@@ -9,10 +9,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FeatureManagement;
 using Microsoft.OpenApi.Models;
 using Multitenant.Dal;
-using Multitenant.FeatureFilters;
+using Multitenant.FeatureHandling;
 using Multitenant.Filters;
 using Multitenant.Multitenancy;
-using Multitenant.Multitenancy.Model;
 using Multitenant.Services;
 
 namespace Multitenant
@@ -44,6 +43,7 @@ namespace Multitenant
 
             services
                 .AddFeatureManagement()
+                .UseDisabledFeaturesHandler(new DisabledFeatureHandler())
                 .AddFeatureFilter<TenantsFeatureFilter>();
 
             // default db context containing tenant configurations

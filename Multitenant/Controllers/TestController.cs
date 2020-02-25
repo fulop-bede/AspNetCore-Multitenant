@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.FeatureManagement.Mvc;
 using Multitenant.Extensions;
-using Multitenant.FeatureFilters;
-using Multitenant.Multitenancy.Model;
+using Multitenant.FeatureHandling;
+using Multitenant.Multitenancy;
 using Multitenant.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
