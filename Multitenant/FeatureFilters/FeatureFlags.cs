@@ -2,6 +2,7 @@
 {
     public static class FeatureFlags
     {
-        public const string RestrictedResource = "RestrictedResource";
+        public const string RestrictedFeatureFlag = "RestrictedFeatureFlag";
+        public const string FancyNewFeatureFlag = "FancyNewFeatureFlag";
     }
 }

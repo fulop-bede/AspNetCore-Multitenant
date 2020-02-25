@@ -44,7 +44,7 @@ namespace Multitenant
 
             services
                 .AddFeatureManagement()
-                .AddFeatureFilter<TenantFeatureFilter>();
+                .AddFeatureFilter<TenantsFeatureFilter>();
 
             // default db context containing tenant configurations
             services.AddDbContext<MasterDbContext>(options =>

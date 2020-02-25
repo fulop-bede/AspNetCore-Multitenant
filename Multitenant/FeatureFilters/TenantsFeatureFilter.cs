@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Multitenant.FeatureFilters
 {
-    [FilterAlias("Tenants")]
-    public class TenantFeatureFilter : IFeatureFilter
+    [FilterAlias(nameof(TenantsFeatureFilter))]
+    public class TenantsFeatureFilter : IFeatureFilter
     {
         private readonly Tenant tenant;
 
-        public TenantFeatureFilter(Tenant tenant)
+        public TenantsFeatureFilter(Tenant tenant)
         {
             this.tenant = tenant;
         }
@@ -19,7 +19,7 @@ namespace Multitenant.FeatureFilters
         public Task<bool> EvaluateAsync(FeatureFilterEvaluationContext context)
         {
             var isEnabled = tenant.EnabledFeatureFlags
-                .Any(f => f.FeatureName == FeatureFlags.RestrictedResource);
+                .Any(f => f.FeatureName == context.FeatureName);
 
             return Task.FromResult(isEnabled);
         }
