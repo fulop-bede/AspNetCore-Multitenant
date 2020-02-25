@@ -12,6 +12,9 @@ namespace Multitenant.Multitenancy
         public virtual ICollection<ServiceMapping> TenantSpecificServices { get; set; }
         public virtual ICollection<FeatureFlag> EnabledFeatureFlags { get; set; }
 
+        public int? AuthenticationSettingsId { get; set; }
+        public virtual AuthenticationSettings AuthenticationSettings { get; set; }
+
         public string GetImplementationTypeName(string type)
         {
             return TenantSpecificServices
@@ -37,5 +40,16 @@ namespace Multitenant.Multitenancy
         public Tenant Tenant { get; set; }
 
         public string FeatureName { get; set; }
+    }
+
+    public class AuthenticationSettings
+    {
+        public int Id { get; set; }
+
+        public bool ValidateIssuer { get; set; }
+        public string ValidIssuer { get; set; }
+        public bool ValidateAudience { get; set; }
+        public string ValidAudience { get; set; }
+        public bool ValidateLifetime { get; set; }
     }
 }

@@ -1,18 +1,23 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Autofac.Multitenant;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Multitenant.Auth;
 using Multitenant.Dal;
 using Multitenant.FeatureHandling;
 using Multitenant.Filters;
 using Multitenant.Multitenancy;
 using Multitenant.Services;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace Multitenant
 {
@@ -52,6 +57,24 @@ namespace Multitenant
                 options.UseSqlServer(Configuration.GetConnectionString("MasterDbConnection"));
             });
 
+            services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = "https://securetoken.google.com/multitenant-baa10";
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = "https://securetoken.google.com/multitenant-baa10",
+                        ValidateAudience = true,
+                        ValidAudience = "multitenant-baa10",
+                        ValidateLifetime = true
+                    };
+                });
+
+            //services.AddSingleton<IPostConfigureOptions<JwtBearerOptions>, CustomJwtBearerOptionsPostConfigureOptions>();
+            //services.AddSingleton<SecurityTokenValidator>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -59,6 +82,16 @@ namespace Multitenant
                     Version = "v1",
                     Title = "WebApi"
                 });
+                c.EnableAnnotations();
+                c.OrderActionsBy(a => a.RelativePath);
+                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Description = "Standard Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
+                c.OperationFilter<SecurityRequirementsOperationFilter>();
                 c.OperationFilter<RequiredHeaderOperationFilter>();
             });
         }
@@ -113,6 +146,8 @@ namespace Multitenant
                 });
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

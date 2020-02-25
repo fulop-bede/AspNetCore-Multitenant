@@ -1,4 +1,5 @@
 ﻿using Autofac.Features.Indexed;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.FeatureManagement.Mvc;
 using Multitenant.Extensions;
@@ -11,6 +12,7 @@ using static Multitenant.Dal.ApplicationDbContext;
 
 namespace Multitenant.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("test")]
     public class TestController : ControllerBase

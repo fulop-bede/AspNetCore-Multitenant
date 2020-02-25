@@ -23,6 +23,7 @@ namespace Multitenant.Multitenancy
             return masterDbContext.Tenants
                 .Include(t => t.TenantSpecificServices)
                 .Include(t => t.EnabledFeatureFlags)
+                .Include(t => t.AuthenticationSettings)
                 .SingleAsync(t => t.TenantCode == code);
         }
     }
