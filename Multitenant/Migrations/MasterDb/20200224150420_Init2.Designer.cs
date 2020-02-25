@@ -9,8 +9,8 @@ using Multitenant.Dal;
 namespace Multitenant.Migrations.MasterDb
 {
     [DbContext(typeof(MasterDbContext))]
-    [Migration("20200224110908_Init")]
-    partial class Init
+    [Migration("20200224150420_Init2")]
+    partial class Init2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,7 +20,30 @@ namespace Multitenant.Migrations.MasterDb
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Multitenant.Multitenancy.Tenant", b =>
+            modelBuilder.Entity("Multitenant.Multitenancy.Model.ServiceMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Implementation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("ServiceMappings");
+                });
+
+            modelBuilder.Entity("Multitenant.Multitenancy.Model.Tenant", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -36,6 +59,15 @@ namespace Multitenant.Migrations.MasterDb
                     b.HasKey("Id");
 
                     b.ToTable("Tenants");
+                });
+
+            modelBuilder.Entity("Multitenant.Multitenancy.Model.ServiceMapping", b =>
+                {
+                    b.HasOne("Multitenant.Multitenancy.Model.Tenant", "Tenant")
+                        .WithMany("TenantSpecificServices")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

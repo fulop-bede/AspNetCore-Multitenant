@@ -6,10 +6,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.FeatureManagement;
 using Microsoft.OpenApi.Models;
 using Multitenant.Dal;
+using Multitenant.FeatureFilters;
 using Multitenant.Filters;
 using Multitenant.Multitenancy;
+using Multitenant.Multitenancy.Model;
 using Multitenant.Services;
 
 namespace Multitenant
@@ -39,10 +42,14 @@ namespace Multitenant
 
             services.AddMemoryCache();
 
+            services
+                .AddFeatureManagement()
+                .AddFeatureFilter<TenantFeatureFilter>();
+
             // default db context containing tenant configurations
             services.AddDbContext<MasterDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(Configuration.GetConnectionString("MasterDbConnection"));
             });
 
             services.AddSwaggerGen(c =>
@@ -61,8 +68,15 @@ namespace Multitenant
             builder.RegisterType<TenantService>().As<ITenantService>().SingleInstance();
             builder.RegisterType<TenantResolver>().As<ITenantResolver>().SingleInstance();
             builder.RegisterType<MyTenantIdentificationStrategy>().As<ITenantIdentificationStrategy>().SingleInstance();
-            builder.RegisterType<DefaultTestService>().As<ITestService>();
             builder.RegisterType<DbUsingService>().As<IDbUsingService>();
+            builder.RegisterType<FirstTenantTestService>().Keyed<ITestService>(nameof(FirstTenantTestService));
+            builder.RegisterType<SecondTenantTestService>().Keyed<ITestService>(nameof(SecondTenantTestService));
+
+            IServiceCollection tenantServices = new ServiceCollection();
+
+            tenantServices.AddDbContext<ApplicationDbContext>();
+
+            builder.Populate(tenantServices);
 
             builder.Register<Tenant>(container =>
             {
@@ -84,28 +98,6 @@ namespace Multitenant
         {
             var strategy = container.Resolve<ITenantIdentificationStrategy>();
             var mtc = new MultitenantContainer(strategy, container);
-
-            mtc.ConfigureTenant("first-tenant", cb =>
-            {
-                IServiceCollection tenantServices = new ServiceCollection();
-
-                tenantServices.AddDbContext<FirstTenantDbContext>();
-                tenantServices.AddScoped<BaseDbContext>(provider => provider.GetService<FirstTenantDbContext>());
-
-                cb.Populate(tenantServices);
-                cb.RegisterType<FirstTenantTestService>().As<ITestService>();
-            });
-            mtc.ConfigureTenant("second-tenant", cb =>
-            {
-                IServiceCollection tenantServices = new ServiceCollection();
-
-                tenantServices.AddDbContext<SecondTenantDbContext>();
-                tenantServices.AddScoped<BaseDbContext>(provider => provider.GetService<SecondTenantDbContext>());
-
-                cb.Populate(tenantServices);
-                cb.RegisterType<SecondTenantTestService>().As<ITestService>();
-            });
-
             return mtc;
         }
 

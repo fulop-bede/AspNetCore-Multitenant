@@ -1,13 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using Multitenant.Multitenancy;
+using Multitenant.Multitenancy.Model;
 using System.IO;
 
 namespace Multitenant.Dal
 {
-	public class FirstTenantDbContextFactory : IDesignTimeDbContextFactory<FirstTenantDbContext>
+	public class FirstTenantDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
 	{
-		public FirstTenantDbContext CreateDbContext(string[] args)
+		public ApplicationDbContext CreateDbContext(string[] args)
 		{
 			IConfigurationRoot configuration = new ConfigurationBuilder()
 											   .SetBasePath(Directory.GetCurrentDirectory())
@@ -16,15 +16,16 @@ namespace Multitenant.Dal
 											   .Build();
 
 			Tenant tenant = new Tenant();
-			configuration.GetSection("Multitenancy:Tenants:0").Bind(tenant);
+			var connectionString = configuration.GetValue<string>("ConnectionStrings:ApplicationDbConnection");
+			tenant.ConnectionString = connectionString;
 
-			return new FirstTenantDbContext(tenant);
+			return new ApplicationDbContext(tenant);
 		}
 	}
 
-	public class SecondTenantDbContextFactory : IDesignTimeDbContextFactory<SecondTenantDbContext>
+	public class MasterDbContextFactory : IDesignTimeDbContextFactory<MasterDbContext>
 	{
-		public SecondTenantDbContext CreateDbContext(string[] args)
+		public MasterDbContext CreateDbContext(string[] args)
 		{
 			IConfigurationRoot configuration = new ConfigurationBuilder()
 											   .SetBasePath(Directory.GetCurrentDirectory())
@@ -32,10 +33,8 @@ namespace Multitenant.Dal
 											   .AddJsonFile("appsettings.Development.json")
 											   .Build();
 
-			Tenant tenant = new Tenant();
-			configuration.GetSection("Multitenancy:Tenants:1").Bind(tenant);
-
-			return new SecondTenantDbContext(tenant);
+			var connectionString = configuration.GetValue<string>("ConnectionStrings:MasterDbConnection");
+			return new MasterDbContext(connectionString);
 		}
 	}
 }

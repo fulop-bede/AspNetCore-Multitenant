@@ -2,7 +2,7 @@
 using Multitenant.Dal;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using static Multitenant.Dal.BaseDbContext;
+using static Multitenant.Dal.ApplicationDbContext;
 
 namespace Multitenant.Services
 {
@@ -13,9 +13,9 @@ namespace Multitenant.Services
 
     public class DbUsingService : IDbUsingService
     {
-        private readonly BaseDbContext baseDbContext;
+        private readonly ApplicationDbContext baseDbContext;
 
-        public DbUsingService(BaseDbContext baseDbContext)
+        public DbUsingService(ApplicationDbContext baseDbContext)
         {
             this.baseDbContext = baseDbContext;
         }

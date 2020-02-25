@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Multitenant.Dal;
+using Multitenant.Multitenancy.Model;
 using System.Threading.Tasks;
 
 namespace Multitenant.Multitenancy
@@ -21,6 +22,8 @@ namespace Multitenant.Multitenancy
         public Task<Tenant> GetTenant(string code)
         {
             return masterDbContext.Tenants
+                .Include(t => t.TenantSpecificServices)
+                .Include(t => t.EnabledFeatureFlags)
                 .SingleAsync(t => t.TenantCode == code);
         }
     }
