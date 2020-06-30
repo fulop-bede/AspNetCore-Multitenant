@@ -57,7 +57,7 @@ namespace Multitenant
 
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
+                .AddJwtBearer("Firebase", options =>
                 {
                     options.Authority = "https://securetoken.google.com/multitenant-baa10";
                     options.TokenValidationParameters = new TokenValidationParameters
@@ -68,6 +68,11 @@ namespace Multitenant
                         ValidAudience = "multitenant-baa10",
                         ValidateLifetime = true
                     };
+                }).AddJwtBearer("IdentityServer4", options =>
+                {
+                    options.Authority = Configuration.GetValue<string>("Authority");
+                    options.RequireHttpsMetadata = false;
+                    options.Audience = "api1";
                 });
 
             services.AddSwaggerGen(c =>

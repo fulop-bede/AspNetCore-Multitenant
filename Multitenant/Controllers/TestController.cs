@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.FeatureManagement.Mvc;
+using Multitenant.Authentication;
 using Multitenant.Extensions;
 using Multitenant.FeatureHandling;
 using Multitenant.Multitenancy;
@@ -12,7 +13,7 @@ using static Multitenant.Dal.ApplicationDbContext;
 
 namespace Multitenant.Controllers
 {
-    [Authorize]
+    [Authorize(AuthenticationSchemes = AuthenticationSchemes.Firebase)]
     [ApiController]
     [Route("test")]
     public class TestController : ControllerBase
@@ -31,7 +32,7 @@ namespace Multitenant.Controllers
 
         [FeatureGate(FeatureFlags.FancyNewFeatureFlag)]
         [HttpGet("tenant-specific-service")]
-        public string GetServiceName()
+        public string GetServiceName2()
         {
             return testService.GetName();
         }

@@ -338,3 +338,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/multitenant_deploy.bat
+/multitenant_build.bat
+/multitenant.yml
